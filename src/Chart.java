@@ -320,7 +320,8 @@ public class Chart
 
     public static String[][] adjustAverageBGs(String url, ZonedDateTime dateStart, ZonedDateTime dateEnd, int min, double isf, int period, double weight, double[] DIA, double[] basalAverages)
     {
-        System.out.println("Adjusting BGs... ");
+        DecimalFormat df = new DecimalFormat("#.##");
+
 
         double averageDIA = 0;
         for(int i = 144; i < 432; i++)
@@ -363,13 +364,15 @@ public class Chart
         {
             insulinDelivered[b] = basalAverages[b]/(60.0/period);
         }
+
+        System.out.println("Adjusting BGs... ");
         double totalRaise = 0;
         double previousTotalRaise = -1;
         double count = 0;
         while(totalRaise - previousTotalRaise > 0)
         {
             count++;
-            System.out.println(totalInsulin + " units applied");
+            System.out.println(df.format(totalInsulin) + " units applied(subtract insulin)");
             previousTotalRaise = totalRaise;
             for(int i = 144; i < adjustedBGs.length-144; i+=period/5)
             {
@@ -453,7 +456,7 @@ public class Chart
         while(totalDrop - previousTotalDrop > 0)
         {
             count++;
-            System.out.println(totalInsulin + " units applied(add insulin)");
+            System.out.println(df.format(totalInsulin) + " units applied(add insulin)");
             previousTotalDrop = totalDrop;
             for(int i = 144; i < adjustedBGs.length-144; i+=period/5)
             {
@@ -559,7 +562,7 @@ public class Chart
 
 
         String[][] extraInsulinCorrected = new String[1440/period+1][4];
-        DecimalFormat df = new DecimalFormat("#.##");
+
         extraInsulinCorrected[0][1] = "Basals";
         extraInsulinCorrected[0][2] = "Basal w/ Temp";
         extraInsulinCorrected[0][3] = "Recommended";
